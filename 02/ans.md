@@ -51,6 +51,22 @@ drwx------+ 47 user group 1.5K Jan 12 18:08 ..
     echo "Everything went according to plan"	
    ```
 
+   **Solution:** 
+
+   ```bash
+   #!/bin/bash
+   count=1
+   while ((1));
+   do
+   	((count++))
+   	./script.sh >out.txt 2>&1
+   	if [$? -ne 0]; then
+   		break
+   	fi
+   done
+   echo "Found error after $count runs"
+   ```
+
    
 
 4. As we covered in the lecture `find`’s `-exec` can be very powerful for performing operations over the files we are searching for. However, what if we want to do something with **all** the files, like creating a zip file? As you have seen so far commands will take input from both arguments and STDIN. When piping commands, we are connecting STDOUT to STDIN, but some commands like `tar` take inputs from arguments. To bridge this disconnect there’s the [`xargs`](https://www.man7.org/linux/man-pages/man1/xargs.1.html) command which will execute a command using STDIN as arguments. For example `ls | xargs rm` will delete the files in the current directory.
@@ -59,4 +75,24 @@ drwx------+ 47 user group 1.5K Jan 12 18:08 ..
 
    If you’re on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0`flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
 
+   **Solution: ** tested on Debian (WSL)
+
+   ```bash
+   find . -type d -name "*.html" -print0 | xargs -0 tar czf html.tar.gz
+   ```
+
 5. (Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
+
+   **Solution: ** tested on Debian (WSL). Find the most recently modified file
+
+   ```bash
+   find . -type d -print0 | xargs -0 stat -c "%X %n" | sort | head -1 | cut -d' ' -f2
+   ```
+
+   List all files by recency
+
+   ```bash
+   find . -type f -print0 | xargs -0 stat -c "%X %n" | sort | cut -d' ' -f2
+   ```
+
+   
