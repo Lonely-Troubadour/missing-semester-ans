@@ -73,9 +73,9 @@ drwx------+ 47 user group 1.5K Jan 12 18:08 ..
 
    Your task is to write a command that recursively finds all HTML files in the folder and makes a zip with them. Note that your command should work even if the files have spaces (hint: check `-d` flag for `xargs`).
 
-   If you’re on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0`flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
+   If you’re on macOS, note that the default BSD `find` is different from the one included in [GNU coreutils](https://en.wikipedia.org/wiki/List_of_GNU_Core_Utilities_commands). You can use `-print0` on `find` and the `-0` flag on `xargs`. As a macOS user, you should be aware that command-line utilities shipped with macOS may differ from the GNU counterparts; you can install the GNU versions if you like by [using brew](https://formulae.brew.sh/formula/coreutils).
 
-   **Solution: ** tested on Debian (WSL)
+   **Solution:** tested on Debian (WSL)
 
    ```bash
    find . -type d -name "*.html" -print0 | xargs -0 tar czf html.tar.gz
@@ -83,7 +83,7 @@ drwx------+ 47 user group 1.5K Jan 12 18:08 ..
 
 5. (Advanced) Write a command or script to recursively find the most recently modified file in a directory. More generally, can you list all files by recency?
 
-   **Solution: ** tested on Debian (WSL). Find the most recently modified file
+   **Solution:** tested on Debian (WSL). Find the most recently modified file
 
    ```bash
    find . -type d -print0 | xargs -0 stat -c "%X %n" | sort | head -1 | cut -d' ' -f2
