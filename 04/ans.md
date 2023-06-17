@@ -44,3 +44,32 @@ diff combinations.txt letters.txt
 sed -i".bk" s/REGEX/SUBSTITUTION/ iput.txt
 ```
 
+### 4. Find your average, median, and max system boot time over the last ten boots. Use journalctl on Linux and log show on macOS, and look for log timestamps near the beginning and end of each boot.
+
+**Solution:** Use `log show` on mac, and output the result to a file for analysis.
+
+```sh
+log show | grep -E "(=== system boot:|Previous shutdown cause: 5)" > log.out
+```
+
+However, neither on Mac nor Linux does the system log stores previous logs. Enabling persistent storage of log messages is necessary. Change `Storage=auto` to `Storage=persistent` in `/etc/systemd/journald.conf` file.
+
+```sh
+for i in {0..9}; do
+    journalctl -b-$i | grep -E "systemd[577]: Startup finished in" >> startup_time.txt
+done
+
+echo "Max system boot time:"
+cat startup_time.txt | sed -E "s/.* = (.*)s\.$/\1" | sort | tail -n1
+
+echo "Average system boot time:"
+echo "($(cat startup_time.txt " | paste -sd+))/10" | bc -l
+
+echo "Median system boot time:"
+```
+
+On Linux, use `systemd-analyze` to check boot time. 
+
+### 5. Look for boot messages that are not shared between your past three reboots (see `journalctl’s -b` flag). Break this task down into multiple steps. First, find a way to get just the logs from the past three boots. There may be an applicable flag on the tool you use to extract the boot logs, or you can use `sed '0,/STRING/d'` to remove all lines previous to one that matches `STRING`. Next, remove any parts of the line that always varies (like the timestamp). Then, de-duplicate the input lines and keep a count of each one (`uniq` is your friend). And finally, eliminate any line whose count is 3 (since it was shared among all the boots).
+
+The first step is to retrieve all log messages from the last 
