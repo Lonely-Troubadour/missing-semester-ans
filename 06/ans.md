@@ -10,12 +10,12 @@
    `git log -n 1 README.md`
 
    3. What was the commit message associated with the last modification to the collections: line of _config.yml? (Hint: use git blame and git show).
-   
+
    `git blame -L '/collections:/',+1 _config.yml | sed -E "s/(.*)\ \(.*\)/\1/" | awk '{ print $1; }' | xargs git show -s --oneline`
 
 3. One common mistake when learning Git is to commit large files that should not be managed by Git or adding sensitive information. Try adding a file to a repository, making some commits and then deleting that file from history (you may want to look at [this](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository "alt")).
 
-
+Use the BFR Repo-Cleaner toool to purging a file from history. `bfg --delete-files FILE`, or using `bfg --replace-text password.txt`.
 
 4. Clone some repository from GitHub, and modify one of its existing files. What happens when you do git stash? What do you see when running git log --all --oneline? Run git stash pop to undo what you did with git stash. In what scenario might this be useful?
 
